@@ -1,0 +1,18 @@
+# claim-guard-vision — CPU-friendly dependencies.
+# Install with:  pip install -r requirements.txt
+# For GPU / training, add torch with CUDA and ultralytics separately (see README).
+
+numpy>=1.24,<2.0
+opencv-python-headless>=4.8
+Pillow>=10.0
+PyYAML>=6.0
+Faker>=19.0
+streamlit>=1.32
+onnxruntime>=1.17
+pytest>=7.4
+
+# Optional — uncomment when you need them:
+# torch>=2.1                 # TamperNet training / export_onnx.py (PyTorch path)
+# torchvision>=0.16
+# ultralytics>=8.1           # YOLOv8-seg inference
+# onnx>=1.15                 # ONNX export validation

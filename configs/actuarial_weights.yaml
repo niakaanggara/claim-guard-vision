@@ -1,0 +1,34 @@
+# Actuarial weights for the claim severity index.
+#
+#   S_claim = sum_i w_i * r_i ** gamma
+#
+# where r_i = A_mask,i / A_reference is the damage-area ratio for component i,
+# w_i is the relative repair-cost weight of that component, and gamma > 1
+# penalises large concentrated damage more than the same area spread out.
+# Weights do not have to sum to 1; they are normalised by the engine when
+# `normalise_weights: true` (see risk_engine.py).
+
+gamma: 1.5
+tau_fraud: 0.65   # P_tamper >= tau_fraud  -> REJECT / FORENSIC AUDIT (regardless of cost)
+tau_cost: 0.45    # S_claim >= tau_cost    -> MANUAL ADJUSTER REVIEW
+                  # otherwise              -> AUTO-APPROVE (FAST TRACK)
+normalise_weights: true
+
+# Component cost weights. Tune these from historical repair invoices.
+# Keys must match the component names produced by the segmentation stage.
+weights:
+  roof: 0.30
+  wall: 0.25
+  window: 0.15
+  door: 0.10
+  floor: 0.12
+  vehicle_body: 0.35
+  vehicle_glass: 0.20
+  other: 0.08
+
+# Optional per-component caps: a single component can contribute at most
+# `cap` to S_claim, which bounds the influence of a very large mask.
+caps:
+  roof: 0.60
+  vehicle_body: 0.60
+  other: 0.30
