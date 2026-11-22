@@ -1,0 +1,38 @@
+# Model & image-processing configuration for claim-guard-vision.
+# All paths are relative to the repository root unless stated otherwise.
+
+image:
+  size: [640, 640]          # model input size (height, width) for segmentation / tamper net
+  ela_size: [1024, 1024]    # max dimension used for ELA; larger images are downscaled first
+  channels: 3
+
+ela:
+  quality: 90               # JPEG quality used for the recompression step (1-100)
+  scale: 10.0               # brightness amplification applied to the ELA difference map
+  anomaly_threshold: 0.35   # P_tamper above this value is treated as suspicious by the dashboard
+  blur_kernel: 3            # median-blur kernel applied to the difference map (0 = disabled)
+
+tamper_net:
+  onnx_path: "models/tamper_net.onnx"   # optional; if missing, the ELA heuristic is used
+  input_size: [224, 224]
+  mean: [0.485, 0.456, 0.406]           # ImageNet normalisation
+  std: [0.229, 0.224, 0.225]
+  threshold: 0.5
+
+segmentation:
+  backend: "auto"           # auto | ultralytics | onnx
+  weights: "models/yolov8s-seg.pt"     # Ultralytics weights (optional for the demo)
+  onnx_path: "models/yolov8s-seg.onnx" # ONNX weights (optional for the demo)
+  confidence: 0.25
+  iou_threshold: 0.45
+  classes: [0, 1, 2]        # placeholder class ids: 0=house, 1=tree, 2=person (HTP / damage)
+  class_names:
+    0: "house"
+    1: "tree"
+    2: "person"
+  max_detections: 100
+
+export:
+  opset: 13
+  dynamic_axes: true
+  half: false
